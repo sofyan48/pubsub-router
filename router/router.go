@@ -1,6 +1,7 @@
 package router
 
 import (
+	"errors"
 	"sync"
 
 	"cloud.google.com/go/pubsub"
@@ -40,9 +41,9 @@ func (r *Router) HandleMessage(m *pubsub.Message) error {
 	h, okRoute := r.handlers[path]
 
 	if okRoute {
+		m.Ack()
 		return h.HandleMessage(m)
 	}
-
 	m.Ack()
-	return nil
+	return errors.New("route not any match")
 }
