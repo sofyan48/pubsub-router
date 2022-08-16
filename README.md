@@ -47,14 +47,14 @@ func main() {
 ``` Golang
 
 func handlerMessage() HandlerFunc {
-	return func(m *pubsub.Message) error {
+	return func(m *pubsubrouter.Message) error error {
 		fmt.Println("FROM EVENT:> ", string(m.Data))
 		return nil
 	}
 }
 
 func handlerMessage2() HandlerFunc {
-	return func(m *pubsub.Message) error {
+	return func(m *pubsubrouter.Message) error {
 		fmt.Println("FROM TEST:> ", string(m.Data))
 		return nil
 	}
