@@ -6,15 +6,15 @@ import (
 	pubsubrouter "github.com/sofyan48/pubsub-router"
 )
 
-type event struct {
+type test struct {
 }
 
-func NewEvent() UseCase {
+func Newtest() UseCase {
 	return &event{}
 }
 
 // Serve implements UseCase
-func (e *event) Serve(m *pubsubrouter.Message) error {
+func (t *test) Serve(m *pubsubrouter.Message) error {
 	fmt.Println(string(m.Data))
 	return nil
 }
