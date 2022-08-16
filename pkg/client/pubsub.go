@@ -12,6 +12,10 @@ type clientPubsub struct {
 	ctx        context.Context
 }
 
+const (
+	MessageAttributeNameRoute = `path`
+)
+
 func NewClient(credential session.Contract) (*clientPubsub, error) {
 	sess, err := pubsub.NewClient(credential.Context(), credential.GetConfig().ProjectID, credential.Option()...)
 	if err != nil {

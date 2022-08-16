@@ -5,7 +5,8 @@ Route your action in gcp Pubsub easy
 ```
 go get github.com/sofyan48/pubsub-router
 ```
-Code example
+
+### Setup Client 
 ``` Golang
 package main
 
@@ -37,15 +38,12 @@ func main() {
 		AuthProviderX509CertURL: os.Getenv("GOOGLE_AUTH_PROVIDER"),
 		ClientX509CertURL:       os.Getenv("GOOGLE_CLIENT_CERT_URL"),
 	}
-
 	sv := pubsubrouter.NewServer(context.Background(), cfg)
-	fmt.Println("RUN 1 WORKER TO ANY EVENT IN PUBSUB")
-	rtr := pubsubrouter.NewRouter()
-	rtr.Handle("/event", handlerMessage())
-	rtr.Handle("/test", handlerMessage2())
-	sv.Subscribe(os.Getenv("EVENT_BROKER_SERIAL"), rtr).Start()
-
 }
+
+```
+### Setup Handler 
+``` Golang
 
 func handlerMessage() handler.HandlerFunc {
 	return func(m *pubsub.Message) error {
@@ -60,6 +58,27 @@ func handlerMessage2() handler.HandlerFunc {
 		return nil
 	}
 }
+```
+
+### Setup Router and Handler
+``` Golang
+	// add router
+	rtr := pubsubrouter.NewRouter()
+	
+	// setup routing and handler
+	rtr.Handle("/event", handlerMessage())
+	rtr.Handle("/test", handlerMessage2())
+
+```
+### Starting Subscriber
+``` Golang
+	sv.Subscribe(os.Getenv("EVENT_BROKER_SERIAL"), rtr).Start()
+```
+### Starting Publisher 
+Send event with attribute path
+``` Golang
+	sv := pubsubrouter.NewServer(context.Background(), cfg)
+	sv.Publish(os.Getenv("EVENT_BROKER_SERIAL"), "/test", "Message send test")
 ```
 
 ## Example

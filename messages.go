@@ -8,6 +8,7 @@ import (
 )
 
 type Message struct {
+	ID          string
 	Attribute   map[string]string
 	Payload     *pubsub.Message
 	Data        []byte

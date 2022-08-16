@@ -27,10 +27,18 @@ func main() {
 		AuthProviderX509CertURL: os.Getenv("GOOGLE_AUTH_PROVIDER"),
 		ClientX509CertURL:       os.Getenv("GOOGLE_CLIENT_CERT_URL"),
 	}
+	sv := pubsubrouter.NewServer(context.Background(), cfg)
 
+	// // publish data
+	// result, err := sv.Publish(os.Getenv("EVENT_BROKER_SERIAL"), "/test", "Message send test")
+	// if err != nil {
+	// 	fmt.Println("error: ", err)
+	// 	panic(err)
+	// }
+	// fmt.Println("result Publish:> ", result)
+	// // subscribe data
 	rtr := router.NewRouter()
 
-	sv := pubsubrouter.NewServer(context.Background(), cfg)
 	sv.Subscribe(os.Getenv("EVENT_BROKER_SERIAL"), rtr.Route()).Start()
 
 }

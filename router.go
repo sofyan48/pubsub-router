@@ -3,16 +3,12 @@ package pubsubrouter
 import (
 	"errors"
 	"sync"
-)
 
-const (
-	MessageAttributeNameRoute = "path"
+	"github.com/sofyan48/pubsub-router/pkg/client"
 )
 
 type Router struct {
 	sync.Mutex
-	// routes   string
-	// handle   handler.Handler
 	handlers map[string]Handler
 }
 
@@ -32,12 +28,11 @@ func (r *Router) Handle(routes string, h Handler) *Router {
 }
 
 func (r *Router) HandleMessage(m *Message) error {
-	path := m.Payload.Attributes[MessageAttributeNameRoute]
+	path := m.Payload.Attributes[client.MessageAttributeNameRoute]
 	h, okRoute := r.handlers[path]
 	if okRoute {
 		m.Payload.Ack()
 		return h.HandleMessage(m)
 	}
-	m.Payload.Ack()
 	return errors.New("route not any match")
 }
