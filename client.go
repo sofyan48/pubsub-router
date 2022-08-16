@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/sofyan48/pubsub-router/pkg/session"
-	"github.com/sofyan48/pubsub-router/server"
 )
 
 type Config struct {
@@ -20,7 +19,7 @@ type Config struct {
 	ClientX509CertURL       string `json:"client_x509_cert_url"`
 }
 
-func NewServer(ctx context.Context, cfg *Config) *server.Server {
+func NewServer(ctx context.Context, cfg *Config) *Server {
 	sess := session.New(ctx, &session.Config{
 		Type:                    cfg.Type,
 		ProjectID:               cfg.ProjectID,
@@ -33,5 +32,5 @@ func NewServer(ctx context.Context, cfg *Config) *server.Server {
 		AuthProviderX509CertURL: cfg.AuthProviderX509CertURL,
 		ClientX509CertURL:       cfg.ClientX509CertURL,
 	})
-	return server.NewServer(ctx, sess)
+	return NewSession(ctx, sess)
 }
