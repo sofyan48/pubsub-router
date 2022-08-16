@@ -77,7 +77,6 @@ func handlerMessage2() handler.HandlerFunc {
 ### Starting Publisher 
 Send event with attribute path
 ``` Golang
-	sv := pubsubrouter.NewServer(context.Background(), cfg)
 	sv.Publish(os.Getenv("EVENT_BROKER_SERIAL"), "/test", "Message send test")
 ```
 
