@@ -1,7 +1,12 @@
-## GCP PubSub Router
-Route your action in PubSub Easy
+# GCP PubSub Router
+Route your action in gcp Pubsub easy
 
-``` golang
+## Installing
+```
+go get github.com/sofyan48/pubsub-router
+```
+Code example
+``` Golang
 package main
 
 import (
@@ -55,5 +60,11 @@ func handlerMessage2() handler.HandlerFunc {
 		return nil
 	}
 }
+```
 
+## Example
+For best model example check example folder
+
+```
+go run example/main.go
 ```
