@@ -47,4 +47,3 @@ bin
 elastic
 .air.toml
 .env
-main.go
