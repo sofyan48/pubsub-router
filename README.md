@@ -20,7 +20,6 @@ import (
 	"cloud.google.com/go/pubsub"
 	"github.com/joho/godotenv"
 	pubsubrouter "github.com/sofyan48/pubsub-router"
-	"github.com/sofyan48/pubsub-router/handler"
 )
 
 func main() {
@@ -47,14 +46,14 @@ func main() {
 ### Setup Handler 
 ``` Golang
 
-func handlerMessage() handler.HandlerFunc {
+func handlerMessage() HandlerFunc {
 	return func(m *pubsub.Message) error {
 		fmt.Println("FROM EVENT:> ", string(m.Data))
 		return nil
 	}
 }
 
-func handlerMessage2() handler.HandlerFunc {
+func handlerMessage2() HandlerFunc {
 	return func(m *pubsub.Message) error {
 		fmt.Println("FROM TEST:> ", string(m.Data))
 		return nil
