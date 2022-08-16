@@ -1,4 +1,4 @@
-name: gate-acl-svc Service Local Development
+name: pubsub router
 
 on:
   push:

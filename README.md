@@ -1,5 +1,5 @@
 # GCP PubSub Router
-[![gate-acl-svc Service Local Development](https://github.com/sofyan48/pubsub-router/actions/workflows/docker-image.yml/badge.svg?branch=master)](https://github.com/sofyan48/pubsub-router/actions/workflows/docker-image.yml)
+[![Pubsub Router Local Development](https://github.com/sofyan48/pubsub-router/actions/workflows/docker-image.yml/badge.svg?branch=master)](https://github.com/sofyan48/pubsub-router/actions/workflows/docker-image.yml)
 ---
 Route your action in gcp Pubsub easy
 
