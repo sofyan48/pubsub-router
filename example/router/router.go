@@ -22,7 +22,7 @@ func (r *Router) handle(svc controller.UseCase) pubsubrouter.HandlerFunc {
 func (r *Router) Route() *pubsubrouter.Router {
 
 	r.rtr.Handle("/event", r.handle(controller.NewEvent()))
-	r.rtr.Handle("/test", r.handle(controller.NewEvent()))
+	r.rtr.Handle("/test", r.handle(controller.Newtest()))
 
 	return r.rtr
 }

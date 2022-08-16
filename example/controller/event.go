@@ -15,6 +15,6 @@ func NewEvent() UseCase {
 
 // Serve implements UseCase
 func (e *event) Serve(m *pubsubrouter.Message) error {
-	fmt.Println(string(m.Data))
+	fmt.Println("EVENT CONTROLLER RECEIVE:> ", string(m.Data))
 	return nil
 }
