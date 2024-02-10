@@ -1,7 +1,6 @@
 package pubsubrouter
 
 import (
-	"errors"
 	"sync"
 
 	"github.com/sofyan48/pubsub-router/pkg/client"
@@ -34,5 +33,7 @@ func (r *Router) HandleMessage(m *Message) error {
 		m.Payload.Ack()
 		return h.HandleMessage(m)
 	}
-	return errors.New("route not any match")
+	// if you need reporting please contrib this error handling
+	// return errors.New("Route Not Any Match")
+	return nil
 }
