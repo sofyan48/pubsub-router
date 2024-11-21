@@ -27,6 +27,17 @@ func NewClient(credential session.Contract) (*clientPubsub, error) {
 	}, nil
 }
 
+func NewClientAutoConfig(ctx context.Context, projectID string) (*clientPubsub, error) {
+	sess, err := pubsub.NewClient(ctx, projectID)
+	if err != nil {
+		return nil, err
+	}
+	return &clientPubsub{
+		ctx:        ctx,
+		sessPubsub: sess,
+	}, nil
+}
+
 func (c *clientPubsub) Client() *pubsub.Client {
 	return c.sessPubsub
 }

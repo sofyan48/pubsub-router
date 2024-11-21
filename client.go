@@ -34,3 +34,7 @@ func NewServer(ctx context.Context, cfg *Config) *Server {
 	})
 	return NewSession(ctx, sess)
 }
+
+func NewServerAutoConfig(ctx context.Context, projectID string) *Server {
+	return NewSessionAutoConfig(ctx, projectID)
+}

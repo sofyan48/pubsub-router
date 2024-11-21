@@ -30,6 +30,17 @@ func NewSession(ctx context.Context, sess session.Contract) *Server {
 	}
 }
 
+func NewSessionAutoConfig(ctx context.Context, projectID string) *Server {
+	cl, err := client.NewClientAutoConfig(ctx, projectID)
+	if err != nil {
+		defer cl.Client().Close()
+	}
+	return &Server{
+		clients: cl.Client(),
+		ctx:     ctx,
+	}
+}
+
 func (s *Server) Subscribe(topic string, r *Router) *Server {
 	s.subClient = s.clients.Subscription(topic)
 	s.router = r
