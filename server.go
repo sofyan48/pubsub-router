@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"sync/atomic"
 	"time"
 
@@ -22,6 +23,7 @@ type Server struct {
 func NewSession(ctx context.Context, sess session.Contract) *Server {
 	cl, err := client.NewClient(sess)
 	if err != nil {
+		log.Fatal("Pubsubrouter client not connected")
 		defer cl.Client().Close()
 	}
 	return &Server{
@@ -33,6 +35,7 @@ func NewSession(ctx context.Context, sess session.Contract) *Server {
 func NewSessionAutoConfig(ctx context.Context, projectID string) *Server {
 	cl, err := client.NewClientAutoConfig(ctx, projectID)
 	if err != nil {
+		log.Fatal("Pubsubrouter client not connected")
 		defer cl.Client().Close()
 	}
 	return &Server{
