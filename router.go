@@ -30,8 +30,12 @@ func (r *Router) HandleMessage(m *Message) error {
 	path := m.Payload.Attributes[client.MessageAttributeNameRoute]
 	h, okRoute := r.handlers[path]
 	if okRoute {
+		err := h.HandleMessage(m)
+		if err != nil {
+			m.Payload.Nack()
+			return err
+		}
 		m.Payload.Ack()
-		return h.HandleMessage(m)
 	}
 	// if you need reporting please contrib this error handling
 	// return errors.New("Route Not Any Match")
