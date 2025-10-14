@@ -3,7 +3,7 @@ package client
 import (
 	"context"
 
-	"cloud.google.com/go/pubsub"
+	"cloud.google.com/go/pubsub/v2"
 	"github.com/sofyan48/pubsub-router/pkg/session"
 )
 

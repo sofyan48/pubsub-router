@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"cloud.google.com/go/pubsub"
+	"cloud.google.com/go/pubsub/v2"
 )
 
 type Message struct {

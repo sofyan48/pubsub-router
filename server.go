@@ -8,7 +8,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"cloud.google.com/go/pubsub"
+	"cloud.google.com/go/pubsub/v2"
 	"github.com/sofyan48/pubsub-router/pkg/client"
 	"github.com/sofyan48/pubsub-router/pkg/session"
 )
@@ -16,7 +16,7 @@ import (
 type Server struct {
 	clients   *pubsub.Client
 	ctx       context.Context
-	subClient *pubsub.Subscription
+	subClient *pubsub.Subscriber
 	router    *Router
 }
 
@@ -45,7 +45,7 @@ func NewSessionAutoConfig(ctx context.Context, projectID string) *Server {
 }
 
 func (s *Server) Subscribe(topic string, r *Router) *Server {
-	s.subClient = s.clients.Subscription(topic)
+	s.subClient = s.clients.Subscriber(topic)
 	s.router = r
 	return s
 }
@@ -54,7 +54,7 @@ func (s *Server) Publish(topic, path, msg string) (string, error) {
 	if path == "" {
 		return "", errors.New("path is required")
 	}
-	cl := s.clients.Topic(topic)
+	cl := s.clients.Publisher(topic)
 	cl.PublishSettings.NumGoroutines = 1
 	return cl.Publish(
 		s.ctx,
