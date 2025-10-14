@@ -3,8 +3,8 @@ module github.com/sofyan48/pubsub-router
 go 1.24.0
 
 require (
-	cloud.google.com/go/pubsub v1.50.0
 	cloud.google.com/go/pubsub/v2 v2.2.0
+	github.com/google/martian v2.1.0+incompatible
 	google.golang.org/api v0.247.0
 )
 
