@@ -3,7 +3,6 @@ package pubsubrouter
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"sync/atomic"
 	"time"
@@ -80,7 +79,6 @@ func (s *Server) Start() {
 		err := s.router.HandleMessage(&m)
 		if err != nil {
 			msg.Ack()
-			fmt.Println("error", err.Error())
 		}
 	})
 }
