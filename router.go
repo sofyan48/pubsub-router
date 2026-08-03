@@ -1,15 +1,19 @@
 package pubsubrouter
 
 import (
+	"errors"
+	"fmt"
+	"log"
 	"runtime/debug"
 	"sync"
 
-	"github.com/google/martian/log"
 	"github.com/sofyan48/pubsub-router/pkg/client"
 )
 
+var ErrRouteNotFound = errors.New("route not found")
+
 type Router struct {
-	sync.Mutex
+	sync.RWMutex
 	handlers map[string]Handler
 }
 
@@ -28,23 +32,25 @@ func (r *Router) Handle(routes string, h Handler) *Router {
 	return r
 }
 
-func (r *Router) HandleMessage(m *Message) error {
+func (r *Router) HandleMessage(m *Message) (err error) {
+	if m == nil || m.Payload == nil {
+		return errors.New("message payload is required")
+	}
+
 	path := m.Payload.Attributes[client.MessageAttributeNameRoute]
 	defer func() {
-		if err := recover(); err != nil {
-			log.Errorf("panic recovered: %v | stack : %v", err, string(debug.Stack()))
+		if recovered := recover(); recovered != nil {
+			log.Printf("panic recovered: %v | stack: %s", recovered, debug.Stack())
+			err = fmt.Errorf("handler panic recovered: %v", recovered)
 		}
 	}()
+
+	r.RLock()
 	h, okRoute := r.handlers[path]
-	if okRoute {
-		err := h.HandleMessage(m)
-		if err != nil {
-			m.Payload.Nack()
-			return err
-		}
-		m.Payload.Ack()
+	r.RUnlock()
+	if !okRoute {
+		return fmt.Errorf("%w: %s", ErrRouteNotFound, path)
 	}
-	// if you need reporting please contrib this error handling
-	// return errors.New("Route Not Any Match")
-	return nil
+
+	return h.HandleMessage(m)
 }

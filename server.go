@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"log"
-	"sync/atomic"
 	"time"
 
 	"cloud.google.com/go/pubsub/v2"
@@ -22,8 +21,7 @@ type Server struct {
 func NewSession(ctx context.Context, sess session.Contract) *Server {
 	cl, err := client.NewClient(sess)
 	if err != nil {
-		log.Fatal("Pubsubrouter client not connected")
-		defer cl.Client().Close()
+		log.Fatalf("pubsubrouter client not connected: %v", err)
 	}
 	return &Server{
 		clients: cl.Client(),
@@ -34,8 +32,7 @@ func NewSession(ctx context.Context, sess session.Contract) *Server {
 func NewSessionAutoConfig(ctx context.Context, projectID string) *Server {
 	cl, err := client.NewClientAutoConfig(ctx, projectID)
 	if err != nil {
-		log.Fatal("Pubsubrouter client not connected")
-		defer cl.Client().Close()
+		log.Fatalf("pubsubrouter client not connected: %v", err)
 	}
 	return &Server{
 		clients: cl.Client(),
@@ -65,20 +62,27 @@ func (s *Server) Publish(topic, path, msg string) (string, error) {
 	).Get(s.ctx)
 }
 
-func (s *Server) Start() {
-	var received int32
-	s.subClient.Receive(s.ctx, func(ctx context.Context, msg *pubsub.Message) {
-		atomic.AddInt32(&received, 1)
-		m := Message{}
-		m.Data = msg.Data
-		m.Attribute = msg.Attributes
-		m.Payload = msg
-		m.PublishTime = msg.PublishTime
-		m.CtlContext = s.ctx
-		m.ID = msg.ID
-		err := s.router.HandleMessage(&m)
-		if err != nil {
-			msg.Ack()
+func (s *Server) Start() error {
+	if s.subClient == nil {
+		return errors.New("subscriber is not configured")
+	}
+	if s.router == nil {
+		return errors.New("router is not configured")
+	}
+
+	return s.subClient.Receive(s.ctx, func(ctx context.Context, msg *pubsub.Message) {
+		m := Message{
+			Data:        msg.Data,
+			Attribute:   msg.Attributes,
+			Payload:     msg,
+			PublishTime: msg.PublishTime,
+			CtlContext:  ctx,
+			ID:          msg.ID,
 		}
+		if err := s.router.HandleMessage(&m); err != nil {
+			msg.Nack()
+			return
+		}
+		msg.Ack()
 	})
 }
